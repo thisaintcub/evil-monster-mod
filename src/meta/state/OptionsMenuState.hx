@@ -450,7 +450,7 @@ class OptionsMenuState extends MusicBeatState
 		{
 			FlxG.sound.play(Paths.sound('clickSfx'));
 			lockedMovement = true;
-			FlxTimer.wait(1, function e() {
+			FlxTimer.wait(0.5, function e() {
 				loadSubgroup(activeSubgroup.members[curSelection].text);
 			});
 		}
@@ -462,7 +462,7 @@ class OptionsMenuState extends MusicBeatState
 		{
 			FlxG.sound.play(Paths.sound('clickSfx'));
 			lockedMovement = true;
-			FlxTimer.wait(1, function e() {
+			FlxTimer.wait(0.5, function e() {
 				openSubState(new OptionsSubstate());
 			});
 			lockedMovement = false;
