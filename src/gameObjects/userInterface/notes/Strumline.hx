@@ -67,6 +67,8 @@ class UIStaticArrow extends FlxSprite
 			offset.set(daOffset[0], daOffset[1]);
 		else
 			offset.set(0, 0);
+
+		//trace(animOffsets);
 	}
 
 	public function addOffset(name:String, x:Float = 0, y:Float = 0)

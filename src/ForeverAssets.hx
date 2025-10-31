@@ -28,7 +28,8 @@ class ForeverAssets
 		var width = 100;
 		var height = 140;
 
-		var newSprite:FlxSprite = new FlxSprite().loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, baseLibrary)), true, width, height);
+		var newSprite:FlxSprite = new FlxSprite().loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, baseLibrary)),
+			true, width, height);
 
 		switch (assetModifier)
 		{
@@ -66,7 +67,8 @@ class ForeverAssets
 	{
 		var width = 500;
 		var height = 163;
-		var rating:FlxSprite = new FlxSprite().loadGraphic(Paths.image(ForeverTools.returnSkinAsset('judgements', assetModifier, changeableSkin, baseLibrary)), true, width, height);
+		var rating:FlxSprite = new FlxSprite().loadGraphic(Paths.image(ForeverTools.returnSkinAsset('judgements', assetModifier, changeableSkin,
+			baseLibrary)), true, width, height);
 
 		switch (assetModifier)
 		{
@@ -135,8 +137,23 @@ class ForeverAssets
 				}
 
 				newStaticArrow.addOffset('static');
-				newStaticArrow.addOffset('pressed', -2, -2);
-				newStaticArrow.addOffset('confirm', 36 + offsetMiddleX, 36 + offsetMiddleY);
+				switch (staticArrowType)
+				{
+					case 0: newStaticArrow.addOffset('pressed', -6, -2);
+						newStaticArrow.addOffset('confirm', 30, 14);
+
+					case 1: newStaticArrow.addOffset('pressed', -3, -2);
+						newStaticArrow.addOffset('confirm', 16, 22);
+						
+					case 2: newStaticArrow.addOffset('pressed', 1, -6);
+						newStaticArrow.addOffset('confirm', 20, 22);
+
+					case 3: newStaticArrow.addOffset('pressed', -.5, -2);
+						newStaticArrow.addOffset('confirm', 40, 20);
+					default:
+				}
+				// newStaticArrow.addOffset('pressed', -2, -2);
+				// newStaticArrow.addOffset('confirm', 36 + offsetMiddleX, 36 + offsetMiddleY);
 		}
 
 		return newStaticArrow;
