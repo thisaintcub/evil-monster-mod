@@ -55,10 +55,12 @@ class PlayState extends MusicBeatState
 	public static var storyPlaylist:Array<String> = [];
 
 	public static var songMusic:FlxSound;
-	
+
 	var vocalsP1:FlxSound;
 	var vocalsP2:FlxSound;
+
 	public static var vocalArray:Array<FlxSound> = [];
+
 	private var vocalsFinished:Bool = false;
 
 	public static var campaignScore:Int = 0;
@@ -78,7 +80,6 @@ class PlayState extends MusicBeatState
 
 	// get it cus release
 	// I'm funny just trust me
-
 	// EDIT [2024/04/12]
 	// lol she removed the old variable that existed here
 	// so this joke doesn't make sense because there's nothing to joke about
@@ -96,7 +97,9 @@ class PlayState extends MusicBeatState
 	private var curSong:String = "";
 
 	public var health:Float = 1; // mario
+
 	public static var deaths:Int = 0; // 64
+
 	public var combo:Int = 0;
 	public var misses:Int = 0;
 
@@ -178,7 +181,7 @@ class PlayState extends MusicBeatState
 			comboGroup.camera = camHUD;
 
 		displayRating('sick', true, true);
-		//popUpCombo(true);
+		// popUpCombo(true);
 
 		stageBuild = new Stage(curStage);
 		add(stageBuild);
@@ -207,7 +210,7 @@ class PlayState extends MusicBeatState
 		Conductor.songPosition = -(Conductor.crochet * 4);
 
 		strumLines = new FlxTypedGroup<Strumline>();
-		
+
 		generateSong(SONG.song);
 
 		camFollow = new FlxObject(0, 0, 1, 1);
@@ -346,8 +349,7 @@ class PlayState extends MusicBeatState
 				Conductor.songPosition = previousTime;
 			}
 
-			if (plrStrums.receptors.members[key] != null
-				&& plrStrums.receptors.members[key].animation.curAnim.name != 'confirm')
+			if (plrStrums.receptors.members[key] != null && plrStrums.receptors.members[key].animation.curAnim.name != 'confirm')
 				plrStrums.receptors.members[key].playAnim('pressed');
 		}
 	}
@@ -466,24 +468,24 @@ class PlayState extends MusicBeatState
 				}
 
 				/*if (!PlayState.SONG.notes[curBar].mustHitSection)
-				{
-					var char = opponent;
+					{
+						var char = opponent;
 
-					var getCenterX = char.getMidpoint().x + 100;
-					var getCenterY = char.getMidpoint().y - 100;
+						var getCenterX = char.getMidpoint().x + 100;
+						var getCenterY = char.getMidpoint().y - 100;
 
-					camFollow.setPosition(getCenterX + camDisplaceX + char.characterData.camOffsetX,
-						getCenterY + camDisplaceY + char.characterData.camOffsetY);
-				}
-				else
-				{
-					var char = boyfriend;
+						camFollow.setPosition(getCenterX + camDisplaceX + char.characterData.camOffsetX,
+							getCenterY + camDisplaceY + char.characterData.camOffsetY);
+					}
+					else
+					{
+						var char = boyfriend;
 
-					var getCenterX = char.getMidpoint().x - 100;
-					var getCenterY = char.getMidpoint().y - 100;
+						var getCenterX = char.getMidpoint().x - 100;
+						var getCenterY = char.getMidpoint().y - 100;
 
-					camFollow.setPosition(getCenterX + camDisplaceX - char.characterData.camOffsetX,
-						getCenterY + camDisplaceY + char.characterData.camOffsetY);
+						camFollow.setPosition(getCenterX + camDisplaceX - char.characterData.camOffsetX,
+							getCenterY + camDisplaceY + char.characterData.camOffsetY);
 				}*/
 			}
 
@@ -602,6 +604,14 @@ class PlayState extends MusicBeatState
 						+ (Math.cos(flixel.math.FlxAngle.asRadians(daNote.noteDirection)) * psuedoX)
 						+ (Math.sin(flixel.math.FlxAngle.asRadians(daNote.noteDirection)) * psuedoY);
 
+					switch (daNote.noteData)
+					{
+						case 0 | 3:
+							daNote.x += 25;
+						case 1:
+							daNote.x += 2;
+					}
+
 					// also set note rotation
 					daNote.angle = -daNote.noteDirection;
 
@@ -609,6 +619,9 @@ class PlayState extends MusicBeatState
 					var center:Float = receptorPosY + Note.swagWidth * 0.5;
 					if (daNote.isSustainNote)
 					{
+						if (daNote.noteData == 0 || daNote.noteData == 3)
+							daNote.x += 25;
+
 						daNote.y -= ((daNote.height * 0.5) * downscrollMultiplier);
 						if ((daNote.animation.curAnim.name.endsWith('holdend')) && (daNote.prevNote != null))
 						{
@@ -620,9 +633,25 @@ class PlayState extends MusicBeatState
 									daNote.endHoldOffset = (daNote.prevNote.y - (daNote.y + daNote.height));
 								else
 									daNote.y += daNote.endHoldOffset;
+								
+								daNote.y += 250;
 							}
 							else
 								daNote.y += ((daNote.height * 0.5) * downscrollMultiplier);
+
+							/*switch (daNote.noteData)
+								{
+									case 0: daNote.x += 25;
+									case 1: daNote.x += 2;
+									case 3: daNote.x += 25;
+							}*/
+						}
+						if (Init.trueSettings.get('Downscroll')) {
+							daNote.y -= 250;
+						}
+						else
+						{
+							daNote.y += 50;
 						}
 
 						if (Init.trueSettings.get('Downscroll'))
@@ -646,6 +675,10 @@ class PlayState extends MusicBeatState
 							{
 								var swagRect = new FlxRect(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);
 								swagRect.y = (center - daNote.y) / daNote.scale.y;
+
+								if (daNote.noteData == 0 || daNote.noteData == 3)
+									swagRect.y -= 10;
+
 								swagRect.height -= swagRect.y;
 								daNote.clipRect = swagRect;
 							}
@@ -691,7 +724,7 @@ class PlayState extends MusicBeatState
 										var breakFromLate:Bool = false;
 										for (note in parentNote.childrenNotes)
 										{
-											//trace('hold amount ${parentNote.childrenNotes.length}, note is late?' + note.tooLate + ', ' + breakFromLate);
+											// trace('hold amount ${parentNote.childrenNotes.length}, note is late?' + note.tooLate + ', ' + breakFromLate);
 											if (note.tooLate && !note.wasGoodHit)
 												breakFromLate = true;
 										}
@@ -751,14 +784,14 @@ class PlayState extends MusicBeatState
 
 			characterPlayAnimation(coolNote, character);
 			if (characterStrums.receptors.members[coolNote.noteData] != null)
-				characterStrums.receptors.members[coolNote.noteData].playAnim('confirm', true);
+				characterStrums.receptors.members[coolNote.noteData].playAnim('confirm', false);
 
 			// special thanks to sam, they gave me the original system which kinda inspired my idea for this new one
 			if (canDisplayJudgement)
 			{
 				// get the note ms timing
 				var noteDiff:Float = Math.abs(coolNote.strumTime - Conductor.songPosition);
-				var isLate: Bool = coolNote.strumTime < Conductor.songPosition;
+				var isLate:Bool = coolNote.strumTime < Conductor.songPosition;
 
 				// loop through all avaliable judgements
 				var foundRating:String = 'miss';
@@ -776,7 +809,7 @@ class PlayState extends MusicBeatState
 				if (!coolNote.isSustainNote)
 				{
 					increaseCombo(foundRating, coolNote.noteData, character);
-					//popUpScore(foundRating, isLate, characterStrums, coolNote);
+					// popUpScore(foundRating, isLate, characterStrums, coolNote);
 					if (coolNote.childrenNotes.length > 0)
 						Timings.notesHit++;
 					healthCall(Timings.judgementsMap.get(foundRating)[3]);
@@ -822,8 +855,7 @@ class PlayState extends MusicBeatState
 		// I tried doing xor and it didnt work lollll
 		if (coolNote.noteAlt > 0)
 			altString = '-alt';
-		if (((SONG.notes[curBar] != null) && (SONG.notes[curBar].altAnim))
-			&& (character.animOffsets.exists(baseString + '-alt')))
+		if (((SONG.notes[curBar] != null) && (SONG.notes[curBar].altAnim)) && (character.animOffsets.exists(baseString + '-alt')))
 		{
 			if (altString != '-alt')
 				altString = '-alt';
@@ -953,7 +985,7 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
-	function popUpScore(baseRating:String, isLate: Bool, strumline:Strumline, coolNote:Note)
+	function popUpScore(baseRating:String, isLate:Bool, strumline:Strumline, coolNote:Note)
 	{
 		// set up the rating
 		var score:Int = 50;
@@ -968,7 +1000,7 @@ class PlayState extends MusicBeatState
 
 		songScore += score;
 
-		//popUpCombo();
+		// popUpCombo();
 	}
 
 	function decreaseCombo(?popMiss:Bool = false)
@@ -986,10 +1018,10 @@ class PlayState extends MusicBeatState
 		if (popMiss)
 		{
 			// doesnt matter miss ratings dont have timings
-			//displayRating("miss", true);
+			// displayRating("miss", true);
 			healthCall(Timings.judgementsMap.get("miss")[3]);
 		}
-		//popUpCombo();
+		// popUpCombo();
 
 		// gotta do it manually here lol
 		Timings.updateFCDisplay();
@@ -1011,12 +1043,14 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	public function displayRating(daRating:String, isLate: Bool, ?cache:Bool = false)
+	public function displayRating(daRating:String, isLate:Bool, ?cache:Bool = false)
 	{
 		if (Init.trueSettings.get('Simply Judgements') && comboGroup.members.length > 0)
 		{
-			for (sprite in comboGroup.members) {
-				if (sprite != null) sprite.destroy();
+			for (sprite in comboGroup.members)
+			{
+				if (sprite != null)
+					sprite.destroy();
 				comboGroup.remove(sprite);
 			}
 		}
@@ -1024,11 +1058,12 @@ class PlayState extends MusicBeatState
 		/* so you might be asking
 			"oh but if the rating isn't sick why not just reset it"
 			because miss judgements can pop, and they dont mess with your sick combo
-		*/
-		
-		final timing =  isLate ? "late" : "early";
+		 */
+
+		final timing = isLate ? "late" : "early";
 		var rating = ForeverAssets.generateRating('$daRating', (daRating == 'sick' ? allSicks : false), timing, assetModifier, changeableSkin, 'UI');
-		if (cache) rating.alpha = 0.000001;
+		if (cache)
+			rating.alpha = 0.000001;
 		comboGroup.add(rating);
 
 		if (!Init.trueSettings.get('Simply Judgements'))
@@ -1090,9 +1125,10 @@ class PlayState extends MusicBeatState
 
 		for (scoreInt in 0...stringArray.length)
 		{
-			var numScore = ForeverAssets.generateCombo('combo', stringArray[scoreInt], (!negative ? allSicks : false), assetModifier, changeableSkin, 'UI', 
+			var numScore = ForeverAssets.generateCombo('combo', stringArray[scoreInt], (!negative ? allSicks : false), assetModifier, changeableSkin, 'UI',
 				negative, createdColor, scoreInt);
-			if (cache) numScore.alpha = 0.000001;
+			if (cache)
+				numScore.alpha = 0.000001;
 			comboGroup.add(numScore);
 
 			// hardcoded lmao
@@ -1140,7 +1176,7 @@ class PlayState extends MusicBeatState
 		{
 			songMusic.play();
 			songMusic.onComplete = endSong;
-			
+
 			for (vocals in vocalArray)
 				vocals.play();
 
@@ -1248,8 +1284,8 @@ class PlayState extends MusicBeatState
 		if ((camGame.zoom < 1.35 && curBeat % 4 == 0))
 		{
 			// yeah
-			//camGame.zoom += 0.015;
-			//camHUD.zoom += 0.05;
+			// camGame.zoom += 0.015;
+			// camHUD.zoom += 0.05;
 		}
 
 		if (SONG.notes[curBar] != null)
@@ -1357,7 +1393,7 @@ class PlayState extends MusicBeatState
 		ForeverTools.killMusic([songMusic]);
 		ForeverTools.killMusic(vocalArray);
 
-		FlxG.switchState(()->new PlayState());
+		FlxG.switchState(() -> new PlayState());
 	}
 
 	var dialogueBox:DialogueBox;
