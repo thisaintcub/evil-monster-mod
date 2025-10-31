@@ -52,9 +52,9 @@ class Init extends FlxState
 			'Whether to pause the game automatically if the window is unfocused.',
 			NOT_FORCED
 		],
-		'FPS Counter' => [true, Checkmark, 'Whether to display the FPS counter.', NOT_FORCED],
+		'FPS Counter' => [false, Checkmark, 'Whether to display the FPS counter.', NOT_FORCED],
 		'Memory Counter' => [
-			true,
+			false,
 			Checkmark,
 			'Whether to display approximately how much memory is being used.',
 			NOT_FORCED

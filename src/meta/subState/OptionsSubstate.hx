@@ -26,6 +26,8 @@ class OptionsSubstate extends MusicBeatSubState
 	{
 		super.create();
 
+		bgColor = FlxColor.GRAY;
+		
 		keyOptions = generateOptions();
 		updateSelection();
 
@@ -163,7 +165,8 @@ class OptionsSubstate extends MusicBeatSubState
 			keyString = keyDisplay.toString();
 		}
 
-		keyString = keyString.replace(" ", "");
+		if (keyString != null)
+			keyString = keyString.replace(" ", "");
 
 		return keyString;
 	}
