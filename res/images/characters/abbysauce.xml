@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="abbysauce.png">
+	<!-- Created with Adobe Animate version 23.0.0.407 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="abdown0000" x="0" y="0" width="817" height="775"/>
+	<SubTexture name="abdown0001" x="0" y="0" width="817" height="775"/>
+	<SubTexture name="abdown0002" x="817" y="0" width="817" height="775"/>
+	<SubTexture name="abdown0003" x="817" y="0" width="817" height="775"/>
+	<SubTexture name="abdown0004" x="817" y="0" width="817" height="775"/>
+	<SubTexture name="abdown0005" x="817" y="0" width="817" height="775"/>
+	<SubTexture name="abdown0006" x="817" y="0" width="817" height="775"/>
+	<SubTexture name="abdown0007" x="817" y="0" width="817" height="775"/>
+	<SubTexture name="abdown0008" x="817" y="0" width="817" height="775"/>
+	<SubTexture name="abdown0009" x="817" y="0" width="817" height="775"/>
+	<SubTexture name="abidle0000" x="1634" y="0" width="817" height="775"/>
+	<SubTexture name="abidle0001" x="1634" y="0" width="817" height="775"/>
+	<SubTexture name="abidle0002" x="1634" y="0" width="817" height="775"/>
+	<SubTexture name="abidle0003" x="1634" y="0" width="817" height="775"/>
+	<SubTexture name="abidle0004" x="1634" y="0" width="817" height="775"/>
+	<SubTexture name="abidle0005" x="1634" y="0" width="817" height="775"/>
+	<SubTexture name="abidle0006" x="1634" y="0" width="817" height="775"/>
+	<SubTexture name="abidle0007" x="1634" y="0" width="817" height="775"/>
+	<SubTexture name="abidle0008" x="1634" y="0" width="817" height="775"/>
+	<SubTexture name="abidle0009" x="1634" y="0" width="817" height="775"/>
+	<SubTexture name="abidle0010" x="1634" y="0" width="817" height="775"/>
+	<SubTexture name="abidle0011" x="1634" y="0" width="817" height="775"/>
+	<SubTexture name="abidle0012" x="1634" y="0" width="817" height="775"/>
+	<SubTexture name="abidle0013" x="1634" y="0" width="817" height="775"/>
+	<SubTexture name="abidle0014" x="1634" y="0" width="817" height="775"/>
+	<SubTexture name="abidle0015" x="1634" y="0" width="817" height="775"/>
+	<SubTexture name="abidle0016" x="1634" y="0" width="817" height="775"/>
+	<SubTexture name="abidle0017" x="1634" y="0" width="817" height="775"/>
+	<SubTexture name="abidle0018" x="1634" y="0" width="817" height="775"/>
+	<SubTexture name="ableft0000" x="2451" y="0" width="817" height="775"/>
+	<SubTexture name="ableft0001" x="2451" y="0" width="817" height="775"/>
+	<SubTexture name="ableft0002" x="3268" y="0" width="817" height="775"/>
+	<SubTexture name="ableft0003" x="3268" y="0" width="817" height="775"/>
+	<SubTexture name="ableft0004" x="3268" y="0" width="817" height="775"/>
+	<SubTexture name="ableft0005" x="3268" y="0" width="817" height="775"/>
+	<SubTexture name="ableft0006" x="3268" y="0" width="817" height="775"/>
+	<SubTexture name="ableft0007" x="3268" y="0" width="817" height="775"/>
+	<SubTexture name="ableft0008" x="3268" y="0" width="817" height="775"/>
+	<SubTexture name="ableft0009" x="3268" y="0" width="817" height="775"/>
+	<SubTexture name="abright0000" x="0" y="775" width="817" height="775"/>
+	<SubTexture name="abright0001" x="0" y="775" width="817" height="775"/>
+	<SubTexture name="abright0002" x="817" y="775" width="817" height="775"/>
+	<SubTexture name="abright0003" x="817" y="775" width="817" height="775"/>
+	<SubTexture name="abright0004" x="817" y="775" width="817" height="775"/>
+	<SubTexture name="abright0005" x="817" y="775" width="817" height="775"/>
+	<SubTexture name="abright0006" x="817" y="775" width="817" height="775"/>
+	<SubTexture name="abright0007" x="817" y="775" width="817" height="775"/>
+	<SubTexture name="abright0008" x="817" y="775" width="817" height="775"/>
+	<SubTexture name="abright0009" x="817" y="775" width="817" height="775"/>
+	<SubTexture name="abup0000" x="1634" y="775" width="817" height="775"/>
+	<SubTexture name="abup0001" x="1634" y="775" width="817" height="775"/>
+	<SubTexture name="abup0002" x="2451" y="775" width="817" height="775"/>
+	<SubTexture name="abup0003" x="2451" y="775" width="817" height="775"/>
+	<SubTexture name="abup0004" x="2451" y="775" width="817" height="775"/>
+	<SubTexture name="abup0005" x="2451" y="775" width="817" height="775"/>
+	<SubTexture name="abup0006" x="2451" y="775" width="817" height="775"/>
+	<SubTexture name="abup0007" x="2451" y="775" width="817" height="775"/>
+	<SubTexture name="abup0008" x="2451" y="775" width="817" height="775"/>
+	<SubTexture name="abup0009" x="2451" y="775" width="817" height="775"/>
+</TextureAtlas>
