@@ -402,6 +402,9 @@ class PlayState extends MusicBeatState
 
 		super.update(elapsed);
 
+		if (Conductor.songPosition == 0)
+			camHUD.visible = true;
+
 		if (health > 2)
 			health = 2;
 
@@ -504,10 +507,6 @@ class PlayState extends MusicBeatState
 			camHUD.angle = FlxMath.lerp(0 + forceZoom[3], camHUD.angle, easeLerp);
 
 			// Controls
-
-			// RESET = Quick Game Over Screen
-			if (controls.RESET && !startingSong)
-				health = 0;
 
 			if (health <= 0 && startedCountdown)
 			{
@@ -1431,9 +1430,11 @@ class PlayState extends MusicBeatState
 		inCutscene = false;
 		Conductor.songPosition = -(Conductor.crochet * 20);
 
-		camHUD.visible = true;
+		camHUD.visible = false;
 
-		new FlxTimer().start(Conductor.crochet * 0.001, function(tmr:FlxTimer) startedCountdown = true, 22); // 20 beats :sob:
+		new FlxTimer().start(Conductor.crochet * 0.001, function(tmr:FlxTimer) {
+			startedCountdown = true;
+		}, 22); // 20 beats :sob:
 	}
 
 	override function add(Object:FlxBasic):FlxBasic

@@ -34,6 +34,8 @@ class Stage extends FlxTypedGroup<FlxBasic>
 	public var curStage = 'room';
 
 	public var room:FNFSprite;
+	public var gradient:FNFSprite;
+	private var gradientTween:FlxTween;
 
 	public var foreground:FlxTypedGroup<FlxBasic>;
 
@@ -60,6 +62,10 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				curStage = 'room';
 
 				room = new FNFSprite(0, 0).loadGraphic(Paths.image('backgrounds/room'));
+
+				gradient = new FNFSprite(400, -400).loadGraphic(Paths.image('backgrounds/gradient'));
+				gradient.alpha = 0;
+				add(gradient);
 		}
 	}
 
@@ -73,13 +79,22 @@ class Stage extends FlxTypedGroup<FlxBasic>
 	{
 		switch (curStage)
 		{
-			//
+			case 'room':
+				dad.x += 650;
+				dad.y -= 200;
 		}
 	}
 
 	public function stageUpdate(curBeat:Int, boyfriend:Boyfriend, dadOpponent:Character)
 	{
-		//
+		if (curBeat % 4 == 0) 
+		{
+			if(gradientTween != null)
+				gradientTween.cancel();
+	
+			gradient.alpha = 1;
+			gradientTween = FlxTween.tween(gradient, {alpha: 0}, 1.5);
+		}
 	}
 
 	public function stageUpdateConstant(elapsed:Float, boyfriend:Boyfriend, dadOpponent:Character)
