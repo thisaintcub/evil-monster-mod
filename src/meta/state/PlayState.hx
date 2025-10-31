@@ -107,16 +107,14 @@ class PlayState extends MusicBeatState
 
 	var paused:Bool = false;
 	var startingSong:Bool = false;
-	var startedCountdown:Bool = false;
 	var inCutscene:Bool = false;
-	var canPause:Bool = true;
 
 	var previousFrameTime:Int = 0;
 	var songTime:Float = 0;
 
-	public var camHUD:FlxCamera;
 	public var camGame:FlxCamera;
-	public var camAlt:FlxCamera;
+	public var camArrows:FlxCamera;
+	public var camHUD:FlxCamera;
 
 	public var camDisplaceX:Float = 0;
 	public var camDisplaceY:Float = 0; // might not use depending on result
@@ -157,14 +155,18 @@ class PlayState extends MusicBeatState
 			FlxG.sound.music.stop();
 
 		camGame = FlxG.camera;
+		camArrows = new FlxCamera();
 		camHUD = new FlxCamera();
-		camAlt = new FlxCamera();
 
+		camArrows.bgColor = 0x00000000;
 		camHUD.bgColor = 0x00000000;
-		camAlt.bgColor = 0x00000000;
 
+		FlxG.cameras.add(camArrows, false);
 		FlxG.cameras.add(camHUD, false);
-		FlxG.cameras.add(camAlt, false);
+
+		//camGame.filters = [new ShaderFilter()];
+		//camArrows.filters = [new ShaderFilter()];
+		//camHUD.filters = [new ShaderFilter()];
 
 		if (SONG == null)
 			SONG = Song.loadFromJson('mesh');
@@ -177,9 +179,7 @@ class PlayState extends MusicBeatState
 			curStage = SONG.stage;
 
 		comboGroup = new FlxSpriteGroup();
-		if (Init.trueSettings.get('Fixed Judgements'))
-			comboGroup.camera = camHUD;
-
+		
 		displayRating('sick', true, true);
 		// popUpCombo(true);
 
@@ -198,7 +198,7 @@ class PlayState extends MusicBeatState
 		if (SONG.assetModifier != null && SONG.assetModifier.length > 1)
 			assetModifier = SONG.assetModifier;
 
-		changeableSkin = Init.trueSettings.get("UI Skin");
+		changeableSkin = 'default';
 
 		add(opponent);
 		if (curStage == 'room')
@@ -231,7 +231,7 @@ class PlayState extends MusicBeatState
 		camGame.focusOn(camFollow.getPosition());
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 
-		startingSong = startedCountdown = true;
+		startingSong = true;
 
 		add(comboGroup);
 
@@ -243,7 +243,7 @@ class PlayState extends MusicBeatState
 		strumLines.add(cpuStrums);
 		strumLines.add(plrStrums);
 
-		strumLines.camera = camHUD;
+		strumLines.camera = camArrows;
 		add(strumLines);
 
 		// holy shit code
@@ -402,143 +402,112 @@ class PlayState extends MusicBeatState
 
 		super.update(elapsed);
 
-		if (Conductor.songPosition == 0)
-			camHUD.visible = true;
-
 		if (health > 2)
 			health = 2;
 
-		// dialogue checks
-		if (dialogueBox != null && dialogueBox.alive)
+		if (startingSong)
 		{
-			// wheee the shift closes the dialogue
-			if (FlxG.keys.justPressed.SHIFT)
-				dialogueBox.closeDialog();
+			Conductor.songPosition += elapsed * 1000;
+			if (Conductor.songPosition >= 0)
+				startSong();
+		}
+		else
+		{
+			Conductor.songPosition += elapsed * 1000;
 
-			// the change I made was just so that it would only take accept inputs
-			if (controls.ACCEPT && dialogueBox.textStarted)
+			if (!paused)
 			{
-				FlxG.sound.play(Paths.sound('clickSfx'));
-				dialogueBox.curPage += 1;
+				songTime += FlxG.game.ticks - previousFrameTime;
+				previousFrameTime = FlxG.game.ticks;
 
-				if (dialogueBox.curPage == dialogueBox.dialogueData.dialogue.length)
-					dialogueBox.closeDialog()
+				if (Conductor.lastSongPos != Conductor.songPosition)
+				{
+					songTime = (songTime + Conductor.songPosition) * 0.5;
+					Conductor.lastSongPos = Conductor.songPosition;
+				}
+			}
+		}
+
+		if (generatedMusic && PlayState.SONG.notes[curBar] != null)
+		{
+			if (curBar != lastBar)
+			{
+				// section reset stuff
+				var lastMustHit:Bool = PlayState.SONG.notes[lastBar].mustHitSection;
+				if (PlayState.SONG.notes[curBar].mustHitSection != lastMustHit)
+				{
+					camDisplaceX = 0;
+					camDisplaceY = 0;
+				}
+				lastBar = Std.int(curBeat * 0.25);
+			}
+
+			/*if (!PlayState.SONG.notes[curBar].mustHitSection)
+				{
+					var char = opponent;
+
+					var getCenterX = char.getMidpoint().x + 100;
+					var getCenterY = char.getMidpoint().y - 100;
+
+					camFollow.setPosition(getCenterX + camDisplaceX + char.characterData.camOffsetX,
+						getCenterY + camDisplaceY + char.characterData.camOffsetY);
+				}
 				else
-					dialogueBox.updateDialog();
-			}
+				{
+					var char = boyfriend;
+
+					var getCenterX = char.getMidpoint().x - 100;
+					var getCenterY = char.getMidpoint().y - 100;
+
+					camFollow.setPosition(getCenterX + camDisplaceX - char.characterData.camOffsetX,
+						getCenterY + camDisplaceY + char.characterData.camOffsetY);
+			}*/
+			if (controls.BACK)
+				Main.switchState(new MainMenuState());
 		}
 
-		if (!inCutscene)
+		var lerpVal = (elapsed * 2.4) * stageBuild.cameraSpeed;
+		camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
+
+		var easeLerp = 1 - Main.framerateAdjust(0.05);
+		// camera stuffs
+		camGame.zoom = FlxMath.lerp(stageBuild.cameraZoom + forceZoom[0], camGame.zoom, easeLerp);
+		camHUD.zoom = FlxMath.lerp(1 + forceZoom[1], camHUD.zoom, easeLerp);
+
+		// not even forcezoom anymore but still
+		camGame.angle = FlxMath.lerp(0 + forceZoom[2], camGame.angle, easeLerp);
+		camHUD.angle = FlxMath.lerp(0 + forceZoom[3], camHUD.angle, easeLerp);
+
+		if (health <= 0)
 		{
-			if (startingSong)
-			{
-				if (startedCountdown)
-				{
-					Conductor.songPosition += elapsed * 1000;
-					if (Conductor.songPosition >= 0)
-						startSong();
-				}
-			}
-			else
-			{
-				Conductor.songPosition += elapsed * 1000;
+			paused = true;
+			persistentUpdate = false;
+			persistentDraw = false;
 
-				if (!paused)
-				{
-					songTime += FlxG.game.ticks - previousFrameTime;
-					previousFrameTime = FlxG.game.ticks;
+			resetMusic();
 
-					if (Conductor.lastSongPos != Conductor.songPosition)
-					{
-						songTime = (songTime + Conductor.songPosition) * 0.5;
-						Conductor.lastSongPos = Conductor.songPosition;
-					}
-				}
-			}
+			deaths += 1;
 
-			if (generatedMusic && PlayState.SONG.notes[curBar] != null)
-			{
-				if (curBar != lastBar)
-				{
-					// section reset stuff
-					var lastMustHit:Bool = PlayState.SONG.notes[lastBar].mustHitSection;
-					if (PlayState.SONG.notes[curBar].mustHitSection != lastMustHit)
-					{
-						camDisplaceX = 0;
-						camDisplaceY = 0;
-					}
-					lastBar = Std.int(curBeat * 0.25);
-				}
+			openSubState(new GameOverSubstate());
 
-				/*if (!PlayState.SONG.notes[curBar].mustHitSection)
-					{
-						var char = opponent;
-
-						var getCenterX = char.getMidpoint().x + 100;
-						var getCenterY = char.getMidpoint().y - 100;
-
-						camFollow.setPosition(getCenterX + camDisplaceX + char.characterData.camOffsetX,
-							getCenterY + camDisplaceY + char.characterData.camOffsetY);
-					}
-					else
-					{
-						var char = boyfriend;
-
-						var getCenterX = char.getMidpoint().x - 100;
-						var getCenterY = char.getMidpoint().y - 100;
-
-						camFollow.setPosition(getCenterX + camDisplaceX - char.characterData.camOffsetX,
-							getCenterY + camDisplaceY + char.characterData.camOffsetY);
-				}*/
-				if (FlxG.keys.justPressed.ESCAPE)
-					Main.switchState(new MainMenuState());
-			}
-
-			var lerpVal = (elapsed * 2.4) * stageBuild.cameraSpeed;
-			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
-
-			var easeLerp = 1 - Main.framerateAdjust(0.05);
-			// camera stuffs
-			camGame.zoom = FlxMath.lerp(stageBuild.cameraZoom + forceZoom[0], camGame.zoom, easeLerp);
-			camHUD.zoom = FlxMath.lerp(1 + forceZoom[1], camHUD.zoom, easeLerp);
-
-			// not even forcezoom anymore but still
-			camGame.angle = FlxMath.lerp(0 + forceZoom[2], camGame.angle, easeLerp);
-			camHUD.angle = FlxMath.lerp(0 + forceZoom[3], camHUD.angle, easeLerp);
-
-			// Controls
-
-			if (health <= 0 && startedCountdown)
-			{
-				paused = true;
-				persistentUpdate = false;
-				persistentDraw = false;
-
-				resetMusic();
-
-				deaths += 1;
-
-				openSubState(new GameOverSubstate());
-
-				#if discord_rpc
-				Discord.changePresence("Game Over - " + songDetails, detailsSub, iconRPC);
-				#end
-			}
-
-			// spawn in the notes from the array
-			if ((unspawnNotes[0] != null) && ((unspawnNotes[0].strumTime - Conductor.songPosition) < 3500))
-			{
-				var dunceNote:Note = unspawnNotes[0];
-				// push note to its correct strumline
-				strumLines.members[Math.floor((dunceNote.noteData + (dunceNote.mustPress ? 4 : 0)) / numberOfKeys)].push(dunceNote);
-				unspawnNotes.splice(unspawnNotes.indexOf(dunceNote), 1);
-			}
-
-			noteCalls();
-
-			if (Init.trueSettings.get('Controller Mode'))
-				controllerInput();
+			#if discord_rpc
+			Discord.changePresence("Game Over - " + songDetails, detailsSub, iconRPC);
+			#end
 		}
+
+		// spawn in the notes from the array
+		if ((unspawnNotes[0] != null) && ((unspawnNotes[0].strumTime - Conductor.songPosition) < 3500))
+		{
+			var dunceNote:Note = unspawnNotes[0];
+			// push note to its correct strumline
+			strumLines.members[Math.floor((dunceNote.noteData + (dunceNote.mustPress ? 4 : 0)) / numberOfKeys)].push(dunceNote);
+			unspawnNotes.splice(unspawnNotes.indexOf(dunceNote), 1);
+		}
+
+		noteCalls();
+
+		if (Init.trueSettings.get('Controller Mode'))
+			controllerInput();
 	}
 
 	// maybe theres a better place to put this, idk -saw
@@ -581,7 +550,7 @@ class PlayState extends MusicBeatState
 		}
 
 		// if the song is generated
-		if (generatedMusic && startedCountdown)
+		if (generatedMusic)
 		{
 			for (strumline in strumLines)
 			{
@@ -1046,16 +1015,6 @@ class PlayState extends MusicBeatState
 
 	public function displayRating(daRating:String, isLate:Bool, ?cache:Bool = false)
 	{
-		if (Init.trueSettings.get('Simply Judgements') && comboGroup.members.length > 0)
-		{
-			for (sprite in comboGroup.members)
-			{
-				if (sprite != null)
-					sprite.destroy();
-				comboGroup.remove(sprite);
-			}
-		}
-
 		/* so you might be asking
 			"oh but if the rating isn't sick why not just reset it"
 			because miss judgements can pop, and they dont mess with your sick combo
@@ -1067,41 +1026,16 @@ class PlayState extends MusicBeatState
 			rating.alpha = 0.000001;
 		comboGroup.add(rating);
 
-		if (!Init.trueSettings.get('Simply Judgements'))
-		{
-			FlxTween.tween(rating, {alpha: 0}, 0.2, {
-				onComplete: function(tween:FlxTween)
-				{
-					rating.destroy();
-				},
-				startDelay: Conductor.crochet * 0.00125
-			});
-		}
-		else
-		{
-			FlxTween.tween(rating, {y: rating.y + 20}, 0.2, {
-				type: FlxTweenType.BACKWARD,
-				ease: FlxEase.circOut
-			});
-			FlxTween.tween(rating, {"scale.x": 0, "scale.y": 0}, 0.1, {
-				onComplete: function(tween:FlxTween)
-				{
-					rating.destroy();
-				},
-				startDelay: Conductor.crochet * 0.00125
-			});
-		}
-		// */
+		FlxTween.tween(rating, {alpha: 0}, 0.2, {
+			onComplete: function(tween:FlxTween)
+			{
+				rating.destroy();
+			},
+			startDelay: Conductor.crochet * 0.00125
+		});
 
 		if (!cache)
 		{
-			if (Init.trueSettings.get('Fixed Judgements'))
-			{
-				// bound to camera
-				rating.camera = camHUD;
-				rating.screenCenter();
-			}
-
 			// return the actual rating to the array of judgements
 			Timings.gottenJudgements.set(daRating, Timings.gottenJudgements.get(daRating) + 1);
 
@@ -1132,31 +1066,14 @@ class PlayState extends MusicBeatState
 				numScore.alpha = 0.000001;
 			comboGroup.add(numScore);
 
-			// hardcoded lmao
-			if (!Init.trueSettings.get('Simply Judgements'))
-			{
-				FlxTween.tween(numScore, {alpha: 0}, 0.2, {
-					onComplete: function(tween:FlxTween)
-					{
-						numScore.destroy();
-					},
-					startDelay: Conductor.crochet * 0.002
-				});
-			}
-			else
-			{
-				// centers combo
-				numScore.y += 10;
-				numScore.x -= 95;
-				numScore.x -= ((comboString.length - 1) * 22);
-				FlxTween.tween(numScore, {y: numScore.y + 20}, 0.1, {
-					type: FlxTweenType.BACKWARD,
-					ease: FlxEase.circOut,
-				});
-			}
-			// hardcoded lmao
-			if (Init.trueSettings.get('Fixed Judgements'))
-				numScore.y += 50;
+			FlxTween.tween(numScore, {alpha: 0}, 0.2, {
+				onComplete: function(tween:FlxTween)
+				{
+					numScore.destroy();
+				},
+				startDelay: Conductor.crochet * 0.002
+			});
+
 			numScore.x += 100;
 		}
 	}
@@ -1170,6 +1087,7 @@ class PlayState extends MusicBeatState
 
 	function startSong():Void
 	{
+		inCutscene = false;
 		startingSong = false;
 		previousFrameTime = FlxG.game.ticks;
 
@@ -1280,6 +1198,12 @@ class PlayState extends MusicBeatState
 
 	override function beatHit()
 	{
+		if (curBeat < 9 && curBeat % 2 == 0)
+		{
+			camArrows.alpha += 0.25;
+			camHUD.alpha += 0.25;
+		}
+
 		super.beatHit();
 
 		if ((camGame.zoom < 1.35 && curBeat % 4 == 0))
@@ -1364,7 +1288,6 @@ class PlayState extends MusicBeatState
 
 	function endSong():Void
 	{
-		canPause = false;
 		songMusic.volume = 0;
 		for (vocals in vocalArray)
 			vocals.volume = 0;
@@ -1397,44 +1320,13 @@ class PlayState extends MusicBeatState
 		FlxG.switchState(() -> new PlayState());
 	}
 
-	var dialogueBox:DialogueBox;
-
 	public function songIntroCutscene()
 	{
-		switch (curSong.toLowerCase())
-		{
-			default:
-				callTextbox();
-		}
-	}
-
-	function callTextbox()
-	{
-		var dialogPath = Paths.json(SONG.song.toLowerCase() + '/dialogue');
-		if (sys.FileSystem.exists(dialogPath))
-		{
-			startedCountdown = false;
-
-			dialogueBox = DialogueBox.createDialogue(sys.io.File.getContent(dialogPath));
-			dialogueBox.camera = camAlt;
-			dialogueBox.whenDaFinish = uncomfyBeginning;
-
-			add(dialogueBox);
-		}
-		else
-			uncomfyBeginning();
-	}
-
-	private function uncomfyBeginning():Void
-	{
-		inCutscene = false;
+		inCutscene = true;
 		Conductor.songPosition = -(Conductor.crochet * 20);
 
-		camHUD.visible = false;
-
-		new FlxTimer().start(Conductor.crochet * 0.001, function(tmr:FlxTimer) {
-			startedCountdown = true;
-		}, 22); // 20 beats :sob:
+		camArrows.alpha = 0;
+		camHUD.alpha = 0;
 	}
 
 	override function add(Object:FlxBasic):FlxBasic

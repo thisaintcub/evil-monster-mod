@@ -140,14 +140,6 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		autoplayMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		autoplayMark.visible = game.plrStrums.autoplay;
 		autoplayMark.screenCenter(X);
-		// repositioning for it to not be covered by the receptors
-		if (Init.trueSettings.get('Centered Notefield'))
-		{
-			if (Init.trueSettings.get('Downscroll'))
-				autoplayMark.y = autoplayMark.y - 125;
-			else
-				autoplayMark.y = autoplayMark.y + 125;
-		}
 		add(autoplayMark);
 	}
 
@@ -218,14 +210,11 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 
 	public function beatHit()
 	{
-		if (!Init.trueSettings.get('Reduced Movements'))
-		{
-			iconP1.setGraphicSize(Std.int(iconP1.width + 30));
-			iconP2.setGraphicSize(Std.int(iconP2.width + 30));
+		iconP1.setGraphicSize(Std.int(iconP1.width + 30));
+		iconP2.setGraphicSize(Std.int(iconP2.width + 30));
 
-			iconP1.updateHitbox();
-			iconP2.updateHitbox();
-		}
+		iconP1.updateHitbox();
+		iconP2.updateHitbox();
 	}
 
 	@:noCompletion

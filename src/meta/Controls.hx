@@ -49,7 +49,6 @@ enum abstract Action(String) to String from String
 	var DOWN_R = "down-release";
 	var ACCEPT = "accept";
 	var BACK = "back";
-	var PAUSE = "pause";
 	var RESET = "reset";
 	var CHEAT = "cheat";
 }
@@ -78,7 +77,6 @@ enum Control
 	RESET;
 	ACCEPT;
 	BACK;
-	PAUSE;
 	CHEAT;
 }
 
@@ -122,7 +120,6 @@ class Controls extends FlxActionSet
 	var _downR = new FlxActionDigital(Action.DOWN_R);
 	var _accept = new FlxActionDigital(Action.ACCEPT);
 	var _back = new FlxActionDigital(Action.BACK);
-	var _pause = new FlxActionDigital(Action.PAUSE);
 	var _reset = new FlxActionDigital(Action.RESET);
 	var _cheat = new FlxActionDigital(Action.CHEAT);
 
@@ -265,11 +262,6 @@ class Controls extends FlxActionSet
 	inline function get_BACK()
 		return _back.check();
 
-	public var PAUSE(get, never):Bool;
-
-	inline function get_PAUSE()
-		return _pause.check();
-
 	public var RESET(get, never):Bool;
 
 	inline function get_RESET()
@@ -310,7 +302,6 @@ class Controls extends FlxActionSet
 		add(_ui_downR);
 		add(_accept);
 		add(_back);
-		add(_pause);
 		add(_reset);
 		add(_cheat);
 
@@ -365,7 +356,6 @@ class Controls extends FlxActionSet
 			case UI_RIGHT: _ui_right;
 			case ACCEPT: _accept;
 			case BACK: _back;
-			case PAUSE: _pause;
 			case RESET: _reset;
 			case CHEAT: _cheat;
 		}
@@ -423,8 +413,6 @@ class Controls extends FlxActionSet
 				func(_accept, JUST_PRESSED);
 			case BACK:
 				func(_back, JUST_PRESSED);
-			case PAUSE:
-				func(_pause, JUST_PRESSED);
 			case RESET:
 				func(_reset, JUST_PRESSED);
 			case CHEAT:
@@ -585,7 +573,6 @@ class Controls extends FlxActionSet
 			Init.gameControls.get('BACK')[0][1],
 			Init.gameControls.get('BACK')[0][2]
 		]);
-		inline bindKeys(Control.PAUSE, [Init.gameControls.get('PAUSE')[0][0], Init.gameControls.get('PAUSE')[0][1]]);
 		inline bindKeys(Control.RESET, [Init.gameControls.get('RESET')[0][0], Init.gameControls.get('RESET')[0][1]]);
 
 		/* 
@@ -599,7 +586,6 @@ class Controls extends FlxActionSet
 					inline bindKeys(Control.RIGHT, [K, FlxKey.RIGHT]);
 					inline bindKeys(Control.ACCEPT, [Z, SPACE, ENTER]);
 					inline bindKeys(Control.BACK, [BACKSPACE, ESCAPE]);
-					inline bindKeys(Control.PAUSE, [P, ENTER, ESCAPE]);
 					inline bindKeys(Control.RESET, [R]);
 				case Duo(true):
 					inline bindKeys(Control.UP, [W]);
@@ -608,7 +594,6 @@ class Controls extends FlxActionSet
 					inline bindKeys(Control.RIGHT, [D]);
 					inline bindKeys(Control.ACCEPT, [G, Z]);
 					inline bindKeys(Control.BACK, [H, X]);
-					inline bindKeys(Control.PAUSE, [ONE]);
 					inline bindKeys(Control.RESET, [R]);
 				case Duo(false):
 					inline bindKeys(Control.UP, [FlxKey.UP]);
@@ -617,7 +602,6 @@ class Controls extends FlxActionSet
 					inline bindKeys(Control.RIGHT, [FlxKey.RIGHT]);
 					inline bindKeys(Control.ACCEPT, [O]);
 					inline bindKeys(Control.BACK, [P]);
-					inline bindKeys(Control.PAUSE, [ENTER]);
 					inline bindKeys(Control.RESET, [BACKSPACE]);
 				case None: // nothing
 				case Custom: // nothing
@@ -632,7 +616,6 @@ class Controls extends FlxActionSet
 					bindKeys(Control.RIGHT, [D, FlxKey.RIGHT]);
 					bindKeys(Control.ACCEPT, [Z, SPACE, ENTER]);
 					bindKeys(Control.BACK, [BACKSPACE, ESCAPE]);
-					bindKeys(Control.PAUSE, [P, ENTER, ESCAPE]);
 					bindKeys(Control.RESET, [R]);
 				case Duo(true):
 					bindKeys(Control.UP, [W]);
@@ -641,7 +624,6 @@ class Controls extends FlxActionSet
 					bindKeys(Control.RIGHT, [D]);
 					bindKeys(Control.ACCEPT, [G, Z]);
 					bindKeys(Control.BACK, [H, X]);
-					bindKeys(Control.PAUSE, [ONE]);
 					bindKeys(Control.RESET, [R]);
 				case Duo(false):
 					bindKeys(Control.UP, [FlxKey.UP]);
@@ -650,7 +632,6 @@ class Controls extends FlxActionSet
 					bindKeys(Control.RIGHT, [FlxKey.RIGHT]);
 					bindKeys(Control.ACCEPT, [O]);
 					bindKeys(Control.BACK, [P]);
-					bindKeys(Control.PAUSE, [ENTER]);
 					bindKeys(Control.RESET, [BACKSPACE]);
 				case None: // nothing
 				case Custom: // nothing
@@ -725,7 +706,6 @@ class Controls extends FlxActionSet
 			Control.DOWN => [DPAD_DOWN, LEFT_STICK_DIGITAL_DOWN],
 			Control.LEFT => [DPAD_LEFT, LEFT_STICK_DIGITAL_LEFT],
 			Control.RIGHT => [DPAD_RIGHT, LEFT_STICK_DIGITAL_RIGHT],
-			Control.PAUSE => [START],
 			Control.RESET => [Y]
 		]);
 		#else
@@ -737,7 +717,6 @@ class Controls extends FlxActionSet
 			Control.DOWN => [DPAD_DOWN, LEFT_STICK_DIGITAL_DOWN, RIGHT_STICK_DIGITAL_DOWN],
 			Control.LEFT => [DPAD_LEFT, LEFT_STICK_DIGITAL_LEFT, RIGHT_STICK_DIGITAL_LEFT],
 			Control.RIGHT => [DPAD_RIGHT, LEFT_STICK_DIGITAL_RIGHT, RIGHT_STICK_DIGITAL_RIGHT],
-			Control.PAUSE => [START],
 			// Swap Y and X for switch
 			Control.RESET => [Y],
 			Control.CHEAT => [X]

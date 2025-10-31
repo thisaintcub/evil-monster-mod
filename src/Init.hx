@@ -65,18 +65,6 @@ class Init extends FlxState
 			'Whether to display information like your game state.',
 			NOT_FORCED
 		],
-		'Reduced Movements' => [
-			false,
-			Checkmark,
-			'Whether to reduce movements, like icons bouncing or beat zooms in gameplay.',
-			NOT_FORCED
-		],
-		'Stage Opacity' => [
-			Checkmark,
-			Selector,
-			'Darkens non-ui elements, useful if you find the characters and backgrounds distracting.',
-			NOT_FORCED
-		],
 		'Counter' => [
 			'None',
 			Selector,
@@ -91,18 +79,6 @@ class Init extends FlxState
 			'Whether to disable Anti-aliasing. Helps improve performance in FPS.',
 			NOT_FORCED
 		],
-		'No Camera Note Movement' => [
-			true,
-			Checkmark,
-			'When enabled, left and right notes no longer move the camera.',
-			NOT_FORCED
-		],
-		'Disable Note Splashes' => [
-			false,
-			Checkmark,
-			'Whether to disable note splashes in gameplay. Useful if you find them distracting.',
-			NOT_FORCED
-		],
 		'Offset' => [Checkmark, 3],
 		'Filter' => [
 			'none',
@@ -110,13 +86,6 @@ class Init extends FlxState
 			'Choose a filter for colorblindness.',
 			NOT_FORCED,
 			['none', 'Deuteranopia', 'Protanopia', 'Tritanopia']
-		],
-		"Clip Style" => [
-			'stepmania',
-			Selector,
-			"Chooses a style for hold note clippings; StepMania: Holds under Receptors; FNF: Holds over receptors",
-			NOT_FORCED,
-			['StepMania', 'FNF']
 		],
 		"UI Skin" => [
 			'default',
@@ -126,39 +95,12 @@ class Init extends FlxState
 			''
 		],
 		"Framerate Cap" => [120, Selector, 'Define your maximum FPS.', NOT_FORCED, ['']],
-		"Opaque Arrows" => [
-			false,
-			Checkmark,
-			"Makes the arrows at the top of the screen opaque again.",
-			NOT_FORCED
-		],
-		"Opaque Holds" => [false, Checkmark, "Huh, why isnt the trail cut off?", NOT_FORCED],
 		'Ghost Tapping' => [
 			true,
 			Checkmark,
 			"Enables Ghost Tapping, allowing you to press inputs without missing.",
 			NOT_FORCED
-		],
-		'Centered Notefield' => [false, Checkmark, "Center the notes, disables the enemy's notes."],
-		'Skip Text' => [
-			'freeplay only',
-			Selector,
-			'Decides whether to skip cutscenes and dialogue in gameplay. May be always, only in freeplay, or never.',
-			NOT_FORCED,
-			['never', 'freeplay only', 'always']
-		],
-		'Fixed Judgements' => [
-			false,
-			Checkmark,
-			"Fixes the judgements to the camera instead of to the world itself, making them easier to read.",
-			NOT_FORCED
-		],
-		'Simply Judgements' => [
-			false,
-			Checkmark,
-			"Simplifies the judgement animations, displaying only one judgement / rating sprite at a time.",
-			NOT_FORCED
-		],
+		]
 	];
 
 	public static var trueSettings:Map<String, Dynamic> = [];
@@ -171,7 +113,6 @@ class Init extends FlxState
 		'RIGHT' => [[FlxKey.RIGHT, D], 3],
 		'ACCEPT' => [[FlxKey.SPACE, Z, FlxKey.ENTER], 4],
 		'BACK' => [[FlxKey.BACKSPACE, X, FlxKey.ESCAPE], 5],
-		'PAUSE' => [[FlxKey.ENTER, P], 6],
 		'RESET' => [[R, null], 13],
 		'UI_UP' => [[FlxKey.UP, W], 8],
 		'UI_DOWN' => [[FlxKey.DOWN, S], 9],
@@ -247,9 +188,6 @@ class Init extends FlxState
 
 		if (!Std.isOfType(trueSettings.get("Framerate Cap"), Int) || trueSettings.get("Framerate Cap") < 30 || trueSettings.get("Framerate Cap") > 360)
 			trueSettings.set("Framerate Cap", 30);
-
-		if (!Std.isOfType(trueSettings.get("Stage Opacity"), Int) || trueSettings.get("Stage Opacity") < 0 || trueSettings.get("Stage Opacity") > 100)
-			trueSettings.set("Stage Opacity", 100);
 
 		gameSettings.get("UI Skin")[4] = CoolUtil.returnAssetsLibrary('UI');
 		if (!gameSettings.get("UI Skin")[4].contains(trueSettings.get("UI Skin")))

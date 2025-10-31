@@ -1,5 +1,6 @@
 package meta.state;
 
+import openfl.filters.ShaderFilter;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -35,6 +36,8 @@ class OptionsMenuState extends MusicBeatState
 	{
 		super.create();
 
+        //FlxG.camera.filters = [new ShaderFilter()];
+		
 		bgColor = FlxColor.GRAY;
 
 		#if discord_rpc

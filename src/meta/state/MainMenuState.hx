@@ -1,5 +1,6 @@
 package meta.state;
 
+import openfl.filters.ShaderFilter;
 import flixel.FlxG;
 import meta.MusicBeat.MusicBeatState;
 import meta.data.*;
@@ -19,6 +20,8 @@ class MainMenuState extends MusicBeatState
 	override public function create():Void
 	{
 		controls.setKeyboardScheme(None, false);
+
+        //FlxG.camera.filters = [new ShaderFilter()];
 
 		bgColor = FlxColor.BLACK;
 
