@@ -329,12 +329,18 @@ class OptionsSubstate extends MusicBeatSubState
 				// loop through existing keys and see if there are any alike
 				var checkKey = FlxG.keys.getIsDown()[0].ID;
 
-				for (i in 0...otherKeys.members.length)	{
+				for (i in 0...otherKeys.members.length)
+				{
 					if (otherKeys.members[i].text == checkKey.toString())
 					{
+						// check if the control exists before accessing it
+						var otherControlText = keyOptions.members[otherKeys.members[i].controlGroupID].text.replace(' ', '_');
+						if (!Init.gameControls.exists(otherControlText)) 
+							continue;
+						
 						// switch them I guess???
-						var oldKey = Init.gameControls.get(keyOptions.members[curSelection].text)[0][curHorizontalSelection];
-						Init.gameControls.get(keyOptions.members[otherKeys.members[i].controlGroupID].text)[0][otherKeys.members[i].extensionJ] = oldKey;
+						var oldKey = Init.gameControls.get(keyOptions.members[curSelection].text.replace(' ', '_'))[0][curHorizontalSelection];
+						Init.gameControls.get(otherControlText)[0][otherKeys.members[i].extensionJ] = oldKey;
 						otherKeys.members[i].text = getStringKey(oldKey);
 					}
 				}
@@ -345,12 +351,6 @@ class OptionsSubstate extends MusicBeatSubState
 
 				// refresh keys
 				controls.setKeyboardScheme(None, false);
-
-				for (i in 0...otherKeys.members.length)
-					{
-						var stringKey = getStringKey(Init.gameControls.get(keyOptions.members[otherKeys.members[i].controlGroupID].text)[0][otherKeys.members[i].extensionJ]);
-						trace('running $i times, options menu');
-				}
 
 				// close the submenu
 				closeSubmenu();
