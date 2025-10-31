@@ -63,7 +63,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 
 				room = new FNFSprite(0, 0).loadGraphic(Paths.image('backgrounds/room'));
 
-				gradient = new FNFSprite(400, -400).loadGraphic(Paths.image('backgrounds/gradient'));
+				gradient = new FNFSprite(400, -500).loadGraphic(Paths.image('backgrounds/gradient'));
 				gradient.alpha = 0;
 				add(gradient);
 		}
@@ -92,7 +92,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 			if(gradientTween != null)
 				gradientTween.cancel();
 	
-			gradient.alpha = 1;
+			gradient.alpha = .5;
 			gradientTween = FlxTween.tween(gradient, {alpha: 0}, 1.5);
 		}
 	}
