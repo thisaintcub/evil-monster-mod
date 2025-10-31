@@ -6,6 +6,7 @@ import meta.data.*;
 import meta.data.dependency.Discord;
 import meta.data.dependency.FNFSprite;
 import flixel.input.mouse.FlxMouseEvent;
+import flixel.util.FlxColor;
 
 using StringTools;
 
@@ -18,6 +19,8 @@ class MainMenuState extends MusicBeatState
 	override public function create():Void
 	{
 		controls.setKeyboardScheme(None, false);
+
+		bgColor = FlxColor.BLACK;
 
 		super.create();
 

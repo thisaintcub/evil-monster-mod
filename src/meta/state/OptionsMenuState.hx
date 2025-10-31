@@ -35,6 +35,8 @@ class OptionsMenuState extends MusicBeatState
 	{
 		super.create();
 
+		bgColor = FlxColor.GRAY;
+
 		#if discord_rpc
 		Discord.changePresence('MENU SCREEN', 'Options Menu');
 		#end
@@ -445,7 +447,9 @@ class OptionsMenuState extends MusicBeatState
 		{
 			FlxG.sound.play(Paths.sound('clickSfx'));
 			lockedMovement = true;
-			loadSubgroup(activeSubgroup.members[curSelection].text);
+			FlxTimer.wait(1, function e() {
+				loadSubgroup(activeSubgroup.members[curSelection].text);
+			});
 		}
 	}
 
@@ -455,24 +459,21 @@ class OptionsMenuState extends MusicBeatState
 		{
 			FlxG.sound.play(Paths.sound('clickSfx'));
 			lockedMovement = true;
-			openSubState(new OptionsSubstate());
+			FlxTimer.wait(1, function e() {
+				openSubState(new OptionsSubstate());
+			});
 			lockedMovement = false;
 		}
 	}
 
 	public function exitMenu()
 	{
-		//
 		if (controls.ACCEPT)
 		{
 			FlxG.sound.play(Paths.sound('clickSfx'));
 			lockedMovement = true;
-			FlxFlicker.flicker(activeSubgroup.members[curSelection], 0.5, 0.06 * 2, true, false, function(flick:FlxFlicker)
-			{
-				Main.switchState(new MainMenuState());
-				lockedMovement = false;
-			});
+			Main.switchState(new MainMenuState());
+			lockedMovement = false;
 		}
-		//
 	}
 }

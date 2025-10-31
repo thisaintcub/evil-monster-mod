@@ -276,11 +276,8 @@ class OptionsSubstate extends MusicBeatSubState
 				FlxG.sound.play(Paths.sound('clickSfx'));
 				submenuOpen = true;
 
-				FlxFlicker.flicker(otherKeys.members[(curSelection * 2) + curHorizontalSelection], 0.5, 0.06 * 2, true, false, function(flick:FlxFlicker)
-				{
-					if (submenuOpen)
-						openSubmenu();
-				});
+				if (submenuOpen)
+					openSubmenu();
 			}
 			else if (controls.BACK)
 				close();
@@ -333,18 +330,15 @@ class OptionsSubstate extends MusicBeatSubState
 				// loop through existing keys and see if there are any alike
 				var checkKey = FlxG.keys.getIsDown()[0].ID;
 
-				// check if any keys use the same key lol
-				/*
-					for (i in 0...otherKeys.members.length)	{
-						if (otherKeys.members[i].text == checkKey.toString())
-						{
-							// switch them I guess???
-							var oldKey = Init.gameControls.get(keyOptions.members[curSelection].text)[0][curHorizontalSelection];
-							Init.gameControls.get(keyOptions.members[otherKeys.members[i].controlGroupID].text)[0][otherKeys.members[i].extensionJ] = oldKey;
-							otherKeys.members[i].text = getStringKey(oldKey);
-						}
+				for (i in 0...otherKeys.members.length)	{
+					if (otherKeys.members[i].text == checkKey.toString())
+					{
+						// switch them I guess???
+						var oldKey = Init.gameControls.get(keyOptions.members[curSelection].text)[0][curHorizontalSelection];
+						Init.gameControls.get(keyOptions.members[otherKeys.members[i].controlGroupID].text)[0][otherKeys.members[i].extensionJ] = oldKey;
+						otherKeys.members[i].text = getStringKey(oldKey);
 					}
-				 */
+				}
 
 				// now check if its the key we want to change
 				Init.gameControls.get(keyOptions.members[curSelection].text.replace(' ', '_'))[0][curHorizontalSelection] = checkKey;
@@ -353,13 +347,11 @@ class OptionsSubstate extends MusicBeatSubState
 				// refresh keys
 				controls.setKeyboardScheme(None, false);
 
-				// update all keys on screen to have the right values
-				// inefficient so I rewrote it lolllll
-				/*for (i in 0...otherKeys.members.length)
+				for (i in 0...otherKeys.members.length)
 					{
 						var stringKey = getStringKey(Init.gameControls.get(keyOptions.members[otherKeys.members[i].controlGroupID].text)[0][otherKeys.members[i].extensionJ]);
 						trace('running $i times, options menu');
-				}*/
+				}
 
 				// close the submenu
 				closeSubmenu();

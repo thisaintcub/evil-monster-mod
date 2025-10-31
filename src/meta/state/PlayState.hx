@@ -487,6 +487,8 @@ class PlayState extends MusicBeatState
 						camFollow.setPosition(getCenterX + camDisplaceX - char.characterData.camOffsetX,
 							getCenterY + camDisplaceY + char.characterData.camOffsetY);
 				}*/
+				if (FlxG.keys.justPressed.ESCAPE)
+					Main.switchState(new MainMenuState());
 			}
 
 			var lerpVal = (elapsed * 2.4) * stageBuild.cameraSpeed;
