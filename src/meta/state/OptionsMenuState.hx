@@ -1,5 +1,7 @@
 package meta.state;
 
+import openfl.utils.Assets;
+import flixel.system.FlxAssets.FlxShader;
 import openfl.filters.ShaderFilter;
 import flixel.FlxBasic;
 import flixel.FlxG;
@@ -36,7 +38,9 @@ class OptionsMenuState extends MusicBeatState
 	{
 		super.create();
 
-        //FlxG.camera.filters = [new ShaderFilter()];
+        //var jpeg = new FlxShader();
+        //jpeg.glFragmentSource = Assets.getText("res/shaders/jpegcompression.frag");
+        //FlxG.camera.filters = [new ShaderFilter(jpeg)];
 		
 		bgColor = FlxColor.GRAY;
 

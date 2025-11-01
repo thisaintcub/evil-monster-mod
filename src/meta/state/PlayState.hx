@@ -1,5 +1,6 @@
 package meta.state;
 
+import flixel.system.FlxAssets.FlxShader;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -164,9 +165,12 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.add(camArrows, false);
 		FlxG.cameras.add(camHUD, false);
 
-		//camGame.filters = [new ShaderFilter()];
-		//camArrows.filters = [new ShaderFilter()];
-		//camHUD.filters = [new ShaderFilter()];
+        //var jpeg = new FlxShader();
+        //jpeg.glFragmentSource = Assets.getText("res/shaders/jpegcompression.frag");
+		
+		//camGame.filters = [new ShaderFilter(jpeg)];
+		//camArrows.filters = [new ShaderFilter(jpeg)];
+		//camHUD.filters = [new ShaderFilter(jpeg)];
 
 		if (SONG == null)
 			SONG = Song.loadFromJson('mesh');
